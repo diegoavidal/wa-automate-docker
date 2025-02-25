@@ -28,7 +28,6 @@ RUN <<eot bash
   mkdir -p /usr/src/app
   mkdir -p /usr/src/app/node_modules
   mkdir -p /config
-  mkdir -p /sessions
   chown -R owauser:owauser /tmp
   apt update
   apt install git nano dumb-init locales -y
@@ -62,7 +61,6 @@ RUN <<eot bash
   groupadd -r owauser && useradd -r -g owauser -G audio,video owauser
   mkdir -p /home/owauser/Downloads
   chown -R owauser:owauser /home/owauser
-  chown -R owauser:owauser /sessions
   chown -R owauser:owauser /config
   chown -R owauser:owauser /usr/src/app/node_modules
   chown -R owauser:owauser ${WA_EXECUTABLE_PATH}

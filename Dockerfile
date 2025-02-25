@@ -13,6 +13,7 @@ ENV WA_EXECUTABLE_PATH=/usr/bin/google-chrome
 ENV WA_CLI_CONFIG=/config
 ENV CHROME_PATH=${WA_EXECUTABLE_PATH}
 ENV WA_USE_CHROME=true
+ENV API_KEY="123456"
 
 ENV CLOUDFLARED_BIN="/usr/src/bin/cloudflared"
 ENV PUPPETEER_CHROMIUM_REVISION=${PUPPETEER_CHROMIUM_REVISION}
@@ -71,4 +72,4 @@ RUN if ! which cloudflared > /dev/null 2>&1; then \
         npx cloudflared@latest bin install; \
     fi
 
-ENTRYPOINT ["/usr/bin/dumb-init", "--", "./start.sh", "./node_modules/@open-wa/wa-automate/bin/server.js", "--use-chrome", "--in-docker", "--qr-timeout", "0", "--popup", "--debug", "--force-port"]
+ENTRYPOINT ["/usr/bin/dumb-init", "--", "./start.sh", "./node_modules/@open-wa/wa-automate/bin/server.js", "--use-chrome", "--in-docker", "--qr-timeout", "0", "--popup", "--debug", "--force-port", "--socket", "-k", "$API_KEY"]

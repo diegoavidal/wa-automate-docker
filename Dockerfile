@@ -64,7 +64,7 @@ eot
 
 ENV LANG en_US.UTF-16
 
-RUN npm prune --production && chown -R owauser:owauser $APP_DIR
+RUN npm prune --production
 
 
 RUN if ! which cloudflared > /dev/null 2>&1; then \

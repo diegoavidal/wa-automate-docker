@@ -2,7 +2,6 @@
 FROM node:current-bullseye-slim
 ENV APP_DIR=/usr/src/app
 
-
 ENV SKIP_GITIGNORE_CHECK true
 ENV NODE_ENV production
 
@@ -27,8 +26,8 @@ WORKDIR $APP_DIR
 RUN <<eot bash
   mkdir -p /usr/src/app
   mkdir -p /usr/src/app/node_modules
+  mkdir -p /sessions
   mkdir -p /config
-  chown -R owauser:owauser /tmp
   apt update
   apt install git nano dumb-init locales -y
   locale-gen en_US.UTF-16
@@ -58,14 +57,7 @@ RUN <<eot bash
   rm -rf /var/lib/apt/lists/*
   rm -rf /usr/share/doc/*
   rm -rf /usr/share/icons/*
-  groupadd -r owauser && useradd -r -g owauser -G audio,video owauser
-  mkdir -p /home/owauser/Downloads
-  chown -R owauser:owauser /home/owauser
-  chown -R owauser:owauser /config
-  chown -R owauser:owauser /usr/src/app/node_modules
-  chown -R owauser:owauser ${WA_EXECUTABLE_PATH}
   cd /usr/src/app
-  chown -R owauser:owauser /usr/src/app
   npm i @open-wa/wa-automate@latest --ignore-scripts
   npm cache clean --force
 eot
@@ -78,7 +70,5 @@ RUN npm prune --production && chown -R owauser:owauser $APP_DIR
 RUN if ! which cloudflared > /dev/null 2>&1; then \
         npx cloudflared@latest bin install; \
     fi
-# test with root later
-USER owauser
 
 ENTRYPOINT ["/usr/bin/dumb-init", "--", "./start.sh", "./node_modules/@open-wa/wa-automate/bin/server.js", "--use-chrome", "--in-docker", "--qr-timeout", "0", "--popup", "--debug", "--force-port"]
